@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أقسام التكنولوجيا والإبداع</title>
+    <style>
+        /* التنسيقات الأساسية */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f6; /* خلفية فاتحة هادئة */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            text-align: right; /* محاذاة النص لليمين للغة العربية */
+        }
+
+        /* تنسيق العنوان الرئيسي */
+        header {
+            background-color: #007bff; /* أزرق جذاب */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        /* تنسيق المحتوى الرئيسي */
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* تنسيق الأقسام */
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 12px; /* حواف مستديرة */
+            margin-bottom: 30px;
+            padding: 30px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08); /* ظل خفيف وجميل */
+            transition: transform 0.3s ease-in-out;
+            border-right: 5px solid #007bff; /* شريط جانبي لوني افتراضي */
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px); /* رفع البطاقة عند المرور فوقها */
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-card h2 {
+            color: #007bff;
+            margin-top: 0;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        /* الألوان التمييزية لكل قسم */
+        .it-card { border-right-color: #28a745; }
+        .it-card h2 { color: #28a745; }
+
+        .cyber-card { border-right-color: #dc3545; }
+        .cyber-card h2 { color: #dc3545; }
+
+        .graphics-card { border-right-color: #ffc107; }
+        .graphics-card h2 { color: #ffc107; }
+
+        /* تنسيق الزر الجديد */
+        .levels-button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 6px;
+            text-decoration: none; /* إزالة خط الرابط */
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            float: left; /* وضعه على اليسار (بسبب اتجاه RTL) */
+        }
+
+        /* تنسيق الزر عند المرور فوقه */
+        .levels-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05); /* تكبير خفيف للزر */
+        }
+
+        /* تنسيق التذييل */
+        footer {
+            background-color: #343a40; /* رمادي داكن */
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌟 مجالات المعرفة والتكنولوجيا 🌟</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="section-card it-card">
+            <h2>💻 تقنية المعلومات (Information Technology)</h2>
+            <p>
+                يُعد هذا القسم الأساس الذي تقوم عليه كافة الأعمال الحديثة. يشمل إدارة وصيانة الأنظمة الحاسوبية، 
+                الشبكات، قواعد البيانات، وتطوير البنية التحتية الرقمية لضمان سير العمل بكفاءة عالية.
+            </p>
+            <ul>
+                <li>**المواضيع:** الشبكات، قواعد البيانات، إدارة الخوادم، الدعم الفني.</li>
+                <li>**أهمية:** العمود الفقري لأي منظمة في العصر الرقمي.</li>
+            </ul>
+            <a href="levels.html?section=it" class="levels-button" style="background-color: #28a745;">استعراض المستويات</a>
+            <div style="clear: both;"></div> </div>
+
+        <div class="section-card cyber-card">
+            <h2>🔒 الأمن السيبراني (Cyber Security)</h2>
+            <p>
+                يركز على حماية الأنظمة والشبكات والبرامج من الهجمات الرقمية، التلف، أو الوصول غير المصرح به. 
+                يهدف إلى الحفاظ على سرية وسلامة وتوافر البيانات والمعلومات الحساسة.
+            </p>
+            <ul>
+                <li>**المواضيع:** اختبار الاختراق، تحليل المخاطر، أمن الشبكات، الاستجابة للحوادث.</li>
+                <li>**أهمية:** حماية الأفراد والمؤسسات من التهديدات الرقمية المتزايدة.</li>
+            </ul>
+            <a href="levels.html?section=cyber" class="levels-button" style="background-color: #dc3545;">استعراض المستويات</a>
+            <div style="clear: both;"></div>
+        </div>
+
+        <div class="section-card graphics-card">
+            <h2>🎨 الجرافيكس والتصميم (Graphics & Design)</h2>
+            <p>
+                هو فن وعلم التواصل البصري الذي يستخدم الصور والنصوص لإنشاء رسائل مرئية جذابة وفعالة. 
+                يشمل تصميم الشعارات، الهويات البصرية، واجهات المستخدم، والرسوم المتحركة.
+            </p>
+            <ul>
+                <li>**المواضيع:** تصميم الهوية، تصميم واجهة المستخدم (UI/UX)، المونتاج، الرسوم المتحركة.</li>
+                <li>**أهمية:** عنصر حيوي في التسويق وبناء العلامة التجارية وتجربة المستخدم.</li>
+            </ul>
+            <a href="levels.html?section=graphics" class="levels-button" style="background-color: #ffc107; color: #333;">استعراض المستويات</a>
+            <div style="clear: both;"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 صفحة الأقسام التقنية والإبداعية - تصميم بسيط وجميل.</p>
+    </footer>
+
+</body>
+</html>
