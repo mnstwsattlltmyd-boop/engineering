@@ -3,455 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SAMOo Pro Chat + Media</title>
+    <title>SAMOo Messenger Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* المتغيرات الأساسية */
+        /* المتغيرات التصميمية */
         :root { 
-            --primary-color: #00a884; 
-            --chat-bg: #efeae2; 
-            --my-msg: #d9fdd3; 
-            --friend-msg: #ffffff; 
-            --danger: #ea0038; 
-            --online: #1fa33e; 
+            --primary-color: #0084ff; /* لون أزرق شبيه بماسينجر */
+            --chat-bg: #f5f7fb; 
+            --my-msg: #0084ff; 
+            --my-text: #ffffff;
+            --friend-msg: #e4e6eb; 
+            --friend-text: #050505;
             --bg-main: #ffffff; 
-            --text-main: #111b21; 
-            --header-bg: #ffffff; 
+            --text-main: #1c1e21; 
+            --header-bg: rgba(255, 255, 255, 0.9);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* الوضع الليلي المحسن */
         body.dark-mode { 
-            --bg-main: #111b21; 
-            --text-main: #e9edef; 
-            --chat-bg: #0b141a; 
-            --my-msg: #005c4b; 
-            --friend-msg: #202c33; 
-            --header-bg: #202c33; 
+            --bg-main: #18191a; 
+            --text-main: #e4e6eb; 
+            --chat-bg: #111111; 
+            --my-msg: #0084ff; 
+            --friend-msg: #3a3b3c; 
+            --friend-text: #e4e6eb;
+            --header-bg: rgba(24, 25, 26, 0.9);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         
-        body { background-color: #f0f2f5; overflow: hidden; user-select: none; transition: var(--transition); }
+        body { background-color: #f0f2f5; overflow: hidden; transition: var(--transition); height: 100vh; display: flex; justify-content: center; }
         
-        /* الحاوية الرئيسية */
-        .app-container { max-width: 500px; margin: 0 auto; background: var(--bg-main); height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        /* الحاوية الرئيسية لمحاكاة الجوال */
+        .app-container { 
+            width: 100%; 
+            max-width: 500px; 
+            background: var(--bg-main); 
+            height: 100vh; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.1); 
+        }
         
-        header { padding: 15px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); background: var(--header-bg); z-index: 10; transition: var(--transition); }
-        header h2 { color: var(--primary-color); font-size: 22px; font-weight: bold; }
+        header { 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--header-bg); 
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        header h2 { font-size: 24px; font-weight: 800; color: var(--text-main); }
         
-        .chats-container { flex: 1; overflow-y: auto; background: var(--bg-main); transition: var(--transition); }
+        /* قائمة المحادثات */
+        .chats-container { flex: 1; overflow-y: auto; padding-top: 5px; }
+        .chat-card { 
+            display: flex; 
+            padding: 12px 16px; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+        .chat-card:active { background: rgba(0,0,0,0.05); }
         
-        /* بطاقة المحادثة */
-        .chat-card { display: flex; padding: 14px 16px; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; position: relative; animation: fadeIn 0.5s ease; }
-        .chat-card:active { background-color: rgba(0,0,0,0.05); }
+        .avatar { 
+            width: 56px; height: 56px; 
+            border-radius: 50%; 
+            background: #e4e6eb; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 24px; position: relative;
+        }
+        .status-dot { 
+            position: absolute; bottom: 2px; right: 2px; 
+            width: 14px; height: 14px; 
+            border-radius: 50%; background: #bdc1c6; 
+            border: 3px solid var(--bg-main); 
+        }
+        .status-dot.online { background: #31a24c; }
         
-        .avatar-wrapper { position: relative; margin-left: 15px; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #dfe5e7; display: flex; align-items: center; justify-content: center; color: #727a7e; font-size: 24px; overflow: hidden; }
-        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; background: #ccc; border: 2px solid var(--bg-main); transition: 0.3s; }
-        .status-dot.online { background: var(--online); box-shadow: 0 0 5px var(--online); }
+        .chat-info { margin-right: 12px; flex: 1; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px; }
+        .chat-info b { color: var(--text-main); font-size: 16px; }
         
-        /* شاشة الدردشة */
-        #chatScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--chat-bg); display: none; flex-direction: column; z-index: 200; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* شاشة الدردشة الكاملة */
+        #chatScreen { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--bg-main); display: none; flex-direction: column; 
+            z-index: 200; animation: slideIn 0.3s ease-out; 
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-        .chat-header { background: var(--header-bg); padding: 10px 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .chat-header { 
+            padding: 10px 15px; display: flex; align-items: center; 
+            gap: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); 
+            background: var(--header-bg);
+        }
         
         /* منطقة الرسائل */
-        .messages-area { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-blend-mode: overlay; scroll-behavior: smooth; }
+        .messages-area { 
+            flex: 1; padding: 20px 15px; overflow-y: auto; 
+            display: flex; flex-direction: column; gap: 4px; 
+            background: var(--chat-bg);
+        }
         
-        .message { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 14.5px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.15); word-wrap: break-word; cursor: pointer; transition: transform 0.1s; animation: pop 0.2s ease-out; }
-        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .message { 
+            max-width: 75%; padding: 10px 16px; 
+            border-radius: 20px; font-size: 15px; 
+            line-height: 1.4; position: relative; 
+            margin-bottom: 2px;
+        }
+        .msg-me { 
+            align-self: flex-end; background: var(--my-msg); 
+            color: var(--my-text); border-bottom-left-radius: 20px;
+        }
+        .msg-friend { 
+            align-self: flex-start; background: var(--friend-msg); 
+            color: var(--friend-text); border-bottom-right-radius: 20px;
+        }
         
-        .msg-me { align-self: flex-end; background: var(--my-msg); color: #111b21; border-top-left-radius: 0; }
-        .msg-friend { align-self: flex-start; background: var(--friend-msg); color: #111b21; border-top-right-radius: 0; }
-        
-        .message img { max-width: 100%; border-radius: 8px; margin: 4px 0; display: block; border: 1px solid rgba(0,0,0,0.05); }
-
         /* شريط الإدخال */
-        .input-area { background: var(--header-bg); padding: 10px; border-top: 1px solid rgba(0,0,0,0.05); }
-        .input-controls { display: flex; align-items: center; gap: 8px; }
-        .input-controls input { flex: 1; border: none; padding: 12px 18px; border-radius: 25px; outline: none; font-size: 15px; background: #f0f2f5; transition: var(--transition); }
-        body.dark-mode .input-controls input { background: #2a3942; color: white; }
+        .input-area { padding: 12px; background: var(--bg-main); }
+        .input-controls { display: flex; align-items: center; gap: 10px; }
+        .input-controls input { 
+            flex: 1; border: none; padding: 10px 18px; 
+            border-radius: 20px; background: #f0f2f5; 
+            outline: none; font-size: 15px; color: var(--text-main);
+        }
+        body.dark-mode .input-controls input { background: #3a3b3c; }
         
-        /* القوائم والمنبثقات */
-        .context-menu { position: fixed; bottom: -100%; left: 0; width: 100%; background: var(--header-bg); z-index: 2000; border-radius: 20px 20px 0 0; padding: 20px; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .context-menu.active { bottom: 0; }
-        
-        .add-chat-btn { position: absolute; bottom: 25px; left: 25px; width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(0,168,132,0.4); z-index: 100; transition: transform 0.2s; }
-        .add-chat-btn:hover { transform: scale(1.1); }
-        
-        /* البحث */
-        .search-container { padding: 8px 15px; background: var(--header-bg); display: none; }
-        .search-container input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; outline: none; }
-
-        .reply-preview-container { display: none; background: rgba(0,0,0,0.03); padding: 10px; border-right: 4px solid var(--primary-color); margin-bottom: 5px; border-radius: 8px; position: relative; }
+        .add-chat-btn { 
+            position: absolute; bottom: 30px; left: 20px; 
+            width: 50px; height: 50px; background: var(--primary-color); 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; color: white; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
-<body onclick="smartClose(event)">
+<body>
 
 <div class="app-container">
-    <div id="mainScreen">
+    <div id="mainScreen" style="display: flex; flex-direction: column; height: 100%;">
         <header>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <i class="fa-solid fa-moon icon-btn" onclick="toggleDarkMode()" id="darkIcon" style="font-size: 20px; cursor: pointer;"></i>
-                <h2>SAMOo</h2>
+            <h2>الدردشات</h2>
+            <div style="display:flex; gap:15px; align-items:center;">
+                <i class="fa-solid fa-circle-half-stroke" onclick="toggleDarkMode()" style="cursor:pointer; font-size: 20px;"></i>
+                <div class="avatar" style="width:35px; height:35px; font-size: 14px; background: var(--primary-color); color:white;">أنا</div>
             </div>
-            <div style="color:var(--danger); cursor:pointer; font-size: 13px; font-weight: 500;" onclick="clearAllData()">مسح البيانات</div>
         </header>
-        <div class="chats-container" id="chatsList"></div>
-        <div class="add-chat-btn" onclick="toggleModal(true)"><i class="fa-solid fa-plus fa-xl"></i></div>
+        <div class="chats-container" id="chatsList">
+            </div>
+        <div class="add-chat-btn" onclick="toggleModal(true)"><i class="fa-solid fa-edit"></i></div>
     </div>
 
     <div id="chatScreen">
         <div class="chat-header">
-            <i class="fa-solid fa-arrow-right icon-btn" onclick="closeChat()" style="cursor:pointer; font-size: 20px;"></i>
+            <i class="fa-solid fa-chevron-right" onclick="closeChat()" style="cursor:pointer; font-size: 20px; color: var(--primary-color);"></i>
             <div class="avatar" style="width:40px; height:40px;"><i class="fa-solid fa-user"></i></div>
             <div style="flex:1">
-                <b id="activeFriendPhone" style="font-size: 16px;">الرقم</b><br>
-                <small id="friendStatusHeader" style="font-size:11px;">جاري التحميل...</small>
+                <b id="activeFriendPhone" style="display:block; font-size: 16px;">الاسم</b>
+                <small id="friendStatusHeader" style="font-size:11px; opacity:0.7;">نشط الآن</small>
             </div>
-            <i class="fa-solid fa-magnifying-glass icon-btn" onclick="toggleSearch()" style="cursor:pointer; font-size: 18px;"></i>
-        </div>
-
-        <div class="search-container" id="searchBar">
-            <input type="text" placeholder="ابحث في الرسائل..." oninput="doSearch(this.value)" id="searchInput">
+            <i class="fa-solid fa-phone" style="color: var(--primary-color); font-size: 18px; margin: 0 10px;"></i>
+            <i class="fa-solid fa-video" style="color: var(--primary-color); font-size: 18px;"></i>
         </div>
 
         <div class="messages-area" id="msgArea"></div>
         
-        <div id="typingIndicator" style="padding: 5px 20px; font-size: 11px; color: var(--online); display: none; font-style: italic;">جاري الكتابة الآن...</div>
+        <div id="typingIndicator" style="padding: 5px 20px; font-size: 11px; color: var(--primary-color); display: none;">جاري الكتابة...</div>
 
         <div class="input-area">
-            <div class="reply-preview-container" id="replyPreview">
-                <div style="font-size:11px; color:var(--primary-color); font-weight:bold;">الرد على:</div>
-                <div id="replyTextPreview" style="font-size:13px; color:gray; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
-                <i class="fa-solid fa-xmark" style="position:absolute; left:10px; top:10px; cursor:pointer;" onclick="closeReply()"></i>
-            </div>
-            
             <div class="input-controls">
-                <label for="imageInput" class="icon-btn" style="cursor:pointer;"><i class="fa-solid fa-paperclip" style="font-size: 20px; color: #54656f;"></i></label>
-                <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="sendImage(this)">
-                <input type="text" id="typeMsg" placeholder="اكتب رسالتك هنا..." onkeypress="handleKey(event)" oninput="notifyTyping()">
+                <i class="fa-solid fa-circle-plus" style="color: var(--primary-color); font-size: 22px;"></i>
+                <input type="text" id="typeMsg" placeholder="Aa" onkeypress="handleKey(event)" oninput="notifyTyping()">
                 <button onclick="sendMsg()" style="background:none; border:none; cursor:pointer;">
-                    <i class="fa-solid fa-paper-plane" style="color:var(--primary-color); font-size: 22px;"></i>
+                    <i class="fa-solid fa-paper-plane" style="color:var(--primary-color); font-size: 20px;"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="menu-overlay" id="menuOverlay" onclick="closeContextMenu()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1999; display: none;"></div>
-    <div class="context-menu" id="contextMenu">
-        <div class="menu-item" onclick="initReply()" style="padding: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px;">
-            <i class="fa-solid fa-reply"></i> رد سريع
+    <div class="modal-overlay" id="modalOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: var(--bg-main); width: 80%; padding: 20px; border-radius: 15px; text-align: center;">
+            <h4 style="margin-bottom: 15px;">بدء محادثة</h4>
+            <input type="tel" id="friendPhone" placeholder="أدخل رقم الهاتف" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;">
+            <button onclick="addNewChat()" style="width:100%; background:var(--primary-color); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold;">موافق</button>
+            <p onclick="toggleModal(false)" style="margin-top:15px; color:gray; cursor:pointer; font-size: 13px;">إلغاء</p>
         </div>
-        <div class="menu-item" onclick="deleteMessage('everyone')" style="padding: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: var(--danger);">
-            <i class="fa-solid fa-trash-can"></i> حذف لدى الجميع
-        </div>
-        <div class="menu-item" onclick="closeContextMenu()" style="padding: 15px; cursor: pointer; text-align: center; color: #888;">إلغاء</div>
-    </div>
-
-    <div class="modal-overlay" id="modalOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 500;">
-        <div class="modal" style="background: var(--bg-main); width: 85%; padding: 25px; border-radius: 20px; text-align: center; color: var(--text-main);">
-            <h3 style="margin-bottom: 15px;">بدء محادثة جديدة</h3>
-            <input type="tel" id="friendPhone" placeholder="رقم هاتف الصديق" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 15px; text-align: center;">
-            <button onclick="addNewChat()" style="width:100%; background:var(--primary-color); color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">بدء الدردشة</button>
-            <p onclick="toggleModal(false)" style="margin-top:15px; color:gray; cursor:pointer; font-size: 14px;">إلغاء</p>
-        </div>
-    </div>
-
-    <div id="fullImageOverlay" onclick="this.style.display='none'" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 1000; display: none; justify-content: center; align-items: center;">
-        <img id="fullImg" src="" style="max-width:95%; max-height:95%; object-fit: contain;">
     </div>
 </div>
 
 <script type="module">
-  // نفس إعدادات Firebase الخاصة بك
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, set, update, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+    // (يجب وضع إعدادات Firebase الخاصة بك هنا كما في الكود السابق)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, set, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyASN_ZX98SkVa1_fcyUSwHv9sXLDCtkLkY",
-    authDomain: "samoo-e789d.firebaseapp.com",
-    projectId: "samoo-e789d",
-    databaseURL: "https://samoo-e789d-default-rtdb.firebaseio.com",
-    storageBucket: "samoo-e789d.firebasestorage.app",
-    messagingSenderId: "36670176510",
-    appId: "1:36670176510:web:5aa755a4152ea95b3439af"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyASN_ZX98SkVa1_fcyUSwHv9sXLDCtkLkY",
+        authDomain: "samoo-e789d.firebaseapp.com",
+        projectId: "samoo-e789d",
+        databaseURL: "https://samoo-e789d-default-rtdb.firebaseio.com",
+        storageBucket: "samoo-e789d.firebasestorage.app",
+        messagingSenderId: "36670176510",
+        appId: "1:36670176510:web:5aa755a4152ea95b3439af"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-  let myNumber = localStorage.getItem('chat_my_number') || "";
-  let friendsList = JSON.parse(localStorage.getItem('my_friends')) || [];
-  let currentFriendPhone = null;
-  let selectedMsgId = null;
-  let selectedMsgText = "";
-  let currentReplyData = null;
-  let longPressTimer;
-  let typingTimeout;
+    let myNumber = localStorage.getItem('chat_my_number') || "";
+    let friendsList = JSON.parse(localStorage.getItem('my_friends')) || [];
+    let currentFriendPhone = null;
 
-  const sndSend = new Audio('https://raw.githubusercontent.com/MoazAlrefai/Whatsapp-Sounds/master/whatsapp_outgoing.mp3');
-  const sndRecv = new Audio('https://raw.githubusercontent.com/MoazAlrefai/Whatsapp-Sounds/master/whatsapp_incoming.mp3');
+    // دالة تبديل الوضع الليلي
+    window.toggleDarkMode = () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    };
 
-  // --- نظام الحضور ---
-  function setupPresence() {
-    if(!myNumber) return;
-    const myStatusRef = ref(db, 'status/' + myNumber);
-    set(myStatusRef, { state: 'online', last_changed: serverTimestamp() });
-    onDisconnect(myStatusRef).set({ state: 'offline', last_changed: serverTimestamp() });
-  }
+    // إرسال رسالة
+    window.sendMsg = () => {
+        const input = document.getElementById('typeMsg');
+        const text = input.value.trim();
+        if (!text || !currentFriendPhone) return;
 
-  // --- الوضع الليلي ---
-  window.toggleDarkMode = () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-    document.getElementById('darkIcon').className = isDark ? 'fa-solid fa-sun icon-btn' : 'fa-solid fa-moon icon-btn';
-  };
-
-  // --- البحث ---
-  window.toggleSearch = () => {
-    const sb = document.getElementById('searchBar');
-    sb.style.display = sb.style.display === 'block' ? 'none' : 'block';
-    if(sb.style.display === 'none') {
-        document.querySelectorAll('.message').forEach(m => m.classList.remove('msg-dim', 'msg-highlight'));
-        document.getElementById('searchInput').value = "";
-    } else {
-        document.getElementById('searchInput').focus();
-    }
-  };
-
-  window.doSearch = (val) => {
-    const messages = document.querySelectorAll('.message');
-    if(!val) {
-        messages.forEach(m => m.classList.remove('msg-dim', 'msg-highlight'));
-        return;
-    }
-    messages.forEach(m => {
-        const text = m.innerText.toLowerCase();
-        if(text.includes(val.toLowerCase())) {
-            m.classList.remove('msg-dim');
-            m.classList.add('msg-highlight');
-        } else {
-            m.classList.add('msg-dim');
-            m.classList.remove('msg-highlight');
-        }
-    });
-  };
-
-  // --- نظام الرد ---
-  window.initReply = () => {
-    currentReplyData = selectedMsgText;
-    document.getElementById('replyTextPreview').innerText = selectedMsgText;
-    document.getElementById('replyPreview').style.display = 'block';
-    closeContextMenu();
-    document.getElementById('typeMsg').focus();
-  };
-
-  window.closeReply = () => {
-    currentReplyData = null;
-    document.getElementById('replyPreview').style.display = 'none';
-  };
-
-  window.smartClose = (e) => {
-    if (e.target.id === "msgArea") {
-        closeReply();
-        if(document.getElementById('searchBar').style.display === 'block') toggleSearch();
-    }
-  };
-
-  window.showContextMenu = (msgId, text) => {
-    selectedMsgId = msgId;
-    selectedMsgText = text;
-    document.getElementById('menuOverlay').style.display = 'block';
-    document.getElementById('contextMenu').classList.add('active');
-  };
-
-  window.closeContextMenu = () => {
-    document.getElementById('menuOverlay').style.display = 'none';
-    document.getElementById('contextMenu').classList.remove('active');
-    selectedMsgId = null;
-  };
-
-  window.deleteMessage = (type) => {
-    if (!selectedMsgId || !currentFriendPhone) return;
-    const chatId = [myNumber, currentFriendPhone].sort().join('_');
-    if (type === 'everyone') {
-        remove(ref(db, `chats/${chatId}/${selectedMsgId}`));
-    }
-    closeContextMenu();
-  };
-
-  window.sendImage = (input) => {
-    const file = input.files[0];
-    if (!file || !currentFriendPhone) return;
-    
-    // ضغط بسيط للصور (اختياري لتحسين الأداء)
-    const reader = new FileReader();
-    reader.onload = (e) => {
         const chatId = [myNumber, currentFriendPhone].sort().join('_');
         push(ref(db, 'chats/' + chatId), {
             sender: myNumber,
-            image: e.target.result,
-            time: Date.now(),
-            type: 'image',
-            status: 'sent'
+            text: text,
+            time: Date.now()
         });
-        sndSend.play();
+        input.value = "";
     };
-    reader.readAsDataURL(file);
-    input.value = "";
-  };
 
-  window.sendMsg = () => {
-    const input = document.getElementById('typeMsg');
-    const text = input.value.trim();
-    if (!text || !currentFriendPhone) return;
+    // فتح محادثة
+    window.openChat = (phone) => {
+        currentFriendPhone = phone;
+        document.getElementById('activeFriendPhone').innerText = phone;
+        document.getElementById('chatScreen').style.display = 'flex';
+        listenForMessages(phone);
+    };
 
-    const chatId = [myNumber, currentFriendPhone].sort().join('_');
-    push(ref(db, 'chats/' + chatId), {
-        sender: myNumber,
-        text: text,
-        replyTo: currentReplyData,
-        time: Date.now(),
-        type: 'text',
-        status: 'sent'
-    });
-    input.value = "";
-    closeReply();
-    sndSend.play();
-    set(ref(db, `typing/${currentFriendPhone}/${myNumber}`), false);
-  };
+    function listenForMessages(phone) {
+        const chatId = [myNumber, phone].sort().join('_');
+        onValue(ref(db, 'chats/' + chatId), (snap) => {
+            const area = document.getElementById('msgArea');
+            area.innerHTML = "";
+            snap.forEach(c => {
+                const m = c.val();
+                const div = document.createElement('div');
+                div.className = `message ${m.sender === myNumber ? 'msg-me' : 'msg-friend'}`;
+                div.innerText = m.text;
+                area.appendChild(div);
+            });
+            area.scrollTop = area.scrollHeight;
+        });
+    }
 
-  function listenForMessages(phone) {
-    const chatId = [myNumber, phone].sort().join('_');
-    onValue(ref(db, 'chats/' + chatId), (snap) => {
-        const area = document.getElementById('msgArea');
-        area.innerHTML = "";
-        snap.forEach(c => {
-            const m = c.val();
-            const msgId = c.key;
+    window.closeChat = () => { document.getElementById('chatScreen').style.display = 'none'; currentFriendPhone = null; };
+    window.toggleModal = (s) => document.getElementById('modalOverlay').style.display = s ? 'flex' : 'none';
+    window.handleKey = (e) => e.key === 'Enter' && window.sendMsg();
 
-            if (m.sender !== myNumber && m.status !== 'read') {
-                update(ref(db, `chats/${chatId}/${msgId}`), { status: 'read' });
-            }
-
-            const div = document.createElement('div');
-            div.className = `message ${m.sender === myNumber ? 'msg-me' : 'msg-friend'}`;
-            
-            let statusIcon = '';
-            if (m.sender === myNumber) {
-                if (m.status === 'sent') statusIcon = '<i class="fa-solid fa-check" style="color:#aaa"></i>';
-                else if (m.status === 'delivered') statusIcon = '<i class="fa-solid fa-check-double" style="color:#aaa"></i>';
-                else if (m.status === 'read') statusIcon = '<i class="fa-solid fa-check-double" style="color:#53bdeb"></i>';
-            }
-
-            let replyContent = m.replyTo ? `<div style="font-size:11px; opacity:0.6; border-right:2px solid var(--primary-color); padding-right:5px; margin-bottom:5px;">${m.replyTo}</div>` : '';
-            let content = m.type === 'image' ? `<img src="${m.image}" onclick="showFullImage('${m.image}')">` : m.text;
-            
-            div.innerHTML = `
-                ${replyContent}
-                <div>${content}</div>
-                <div style="font-size:10px; display:flex; justify-content:flex-end; gap:4px; margin-top:4px; opacity:0.7;">
-                    ${new Date(m.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                    ${statusIcon}
-                </div>
+    window.renderFriends = () => {
+        const list = document.getElementById('chatsList');
+        list.innerHTML = "";
+        friendsList.forEach(f => {
+            const phone = f.phone || f;
+            const card = document.createElement('div');
+            card.className = 'chat-card';
+            card.innerHTML = `
+                <div class="avatar"><i class="fa-solid fa-user"></i><div class="status-dot" id="dot-${phone}"></div></div>
+                <div class="chat-info"><b>${phone}</b><br><small style="color:gray;">انقر لبدء الدردشة</small></div>
             `;
-
-            div.onmousedown = div.ontouchstart = () => longPressTimer = setTimeout(() => showContextMenu(msgId, m.text || "صورة"), 700);
-            div.onmouseup = div.ontouchend = () => clearTimeout(longPressTimer);
-
-            area.appendChild(div);
+            card.onclick = () => openChat(phone);
+            list.appendChild(card);
         });
-        area.scrollTop = area.scrollHeight;
-    });
-  }
+    };
 
-  window.showFullImage = (src) => {
-    document.getElementById('fullImg').src = src;
-    document.getElementById('fullImageOverlay').style.display = 'flex';
-  };
+    window.addNewChat = () => {
+        const p = document.getElementById('friendPhone').value.trim();
+        if(p) {
+            friendsList.push({phone: p});
+            localStorage.setItem('my_friends', JSON.stringify(friendsList));
+            renderFriends();
+            toggleModal(false);
+        }
+    };
 
-  window.notifyTyping = () => {
-    if (!currentFriendPhone) return;
-    set(ref(db, `typing/${currentFriendPhone}/${myNumber}`), true);
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-        set(ref(db, `typing/${currentFriendPhone}/${myNumber}`), false);
-    }, 2000);
-  };
-
-  window.openChat = (phone) => {
-    currentFriendPhone = phone;
-    document.getElementById('activeFriendPhone').innerText = phone;
-    document.getElementById('chatScreen').style.display = 'flex';
-    listenForMessages(phone);
-    onValue(ref(db, 'status/' + phone), (s) => {
-        const state = s.val()?.state || 'offline';
-        const headerStatus = document.getElementById('friendStatusHeader');
-        headerStatus.innerText = state === 'online' ? 'متصل الآن' : 'غير متصل';
-        headerStatus.style.color = state === 'online' ? 'var(--online)' : 'gray';
-    });
-    onValue(ref(db, `typing/${myNumber}/${phone}`), (s) => {
-        document.getElementById('typingIndicator').style.display = s.val() ? 'block' : 'none';
-    });
-  };
-
-  window.closeChat = () => {
-    document.getElementById('chatScreen').style.display = 'none';
-    currentFriendPhone = null;
-  };
-
-  window.renderFriends = () => {
-    const list = document.getElementById('chatsList');
-    list.innerHTML = "";
-    friendsList.forEach(f => {
-        const phone = f.phone || f;
-        const card = document.createElement('div');
-        card.className = 'chat-card';
-        card.innerHTML = `
-            <div class="avatar-wrapper">
-                <div class="avatar"><i class="fa-solid fa-user"></i></div>
-                <div class="status-dot" id="dot-${phone}"></div>
-            </div>
-            <div class="chat-info"><b>${phone}</b><br><small style="color:gray;">انقر لبدء الدردشة</small></div>
-        `;
-        card.onclick = () => openChat(phone);
-        list.appendChild(card);
-        onValue(ref(db, 'status/' + phone), s => {
-            const dot = document.getElementById(`dot-${phone}`);
-            if(dot) dot.className = `status-dot ${s.val()?.state === 'online' ? 'online' : ''}`;
-        });
-    });
-  };
-
-  window.addNewChat = () => {
-    const p = document.getElementById('friendPhone').value.trim();
-    if(p && !friendsList.find(i => (i.phone||i) === p)) {
-        friendsList.push({phone: p});
-        localStorage.setItem('my_friends', JSON.stringify(friendsList));
-        renderFriends();
-    }
-    toggleModal(false);
-  };
-
-  window.clearAllData = () => { if(confirm("سيتم حذف جميع المحادثات والبيانات، هل أنت متأكد؟")) { localStorage.clear(); location.reload(); } };
-  window.toggleModal = (s) => document.getElementById('modalOverlay').style.display = s ? 'flex' : 'none';
-  window.handleKey = (e) => e.key === 'Enter' && window.sendMsg();
-
-  window.onload = () => {
-    if(!myNumber) {
-        myNumber = prompt("أهلاً بك! يرجى إدخال رقم هاتفك للبدء:");
-        if(myNumber) { localStorage.setItem('chat_my_number', myNumber); location.reload(); }
-    } else {
-        if(localStorage.getItem('darkMode') === 'true') toggleDarkMode();
-        setupPresence();
-        renderFriends();
-    }
-  };
+    window.onload = () => {
+        if(!myNumber) {
+            myNumber = prompt("أدخل رقمك للبدء:");
+            if(myNumber) { localStorage.setItem('chat_my_number', myNumber); location.reload(); }
+        } else {
+            if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+            renderFriends();
+        }
+    };
 </script>
 </body>
 </html>
