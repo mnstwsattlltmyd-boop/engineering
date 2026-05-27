@@ -13,7 +13,7 @@
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-512x512.png">
-<link rel="apple-touch-icon" href="icon-512x512.png">
+    <link rel="apple-touch-icon" href="icon-512x512.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -203,7 +203,9 @@
         }
 
         .tab-content.active {
-            display: block;
+            display: block !important;
+            width: 100% !important;
+            clear: both;
         }
 
         @keyframes fadeIn {
@@ -498,9 +500,48 @@
             margin-right: 10px;
             font-weight: 600;
         }
+        
+        #custom-splash {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: #ffffff;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .splash-logo { 
+            width: 150px; 
+            height: 150px; 
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .splash-title { 
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333; 
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+
+        .splash-developer { 
+            font-size: 1rem; 
+            color: #666; 
+            margin-top: 5px; 
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    
+   
     <header>
         <h1><i class="fa-solid fa-graduation-cap"></i> منصة أدوات الطالب الجامعي</h1>
         <p>إدارة متكاملة للحياة الجامعية - جدول، درجات، مهام، وملاحظات ذكية</p>
@@ -527,12 +568,12 @@
             <button class="tab-btn" onclick="switchTab('deadlines')"><i class="fa-solid fa-hourglass-end"></i> المواعيد</button>
             <button class="tab-btn" onclick="switchTab('flashcards')"><i class="fa-solid fa-layer-group"></i> الكروت</button>
             <button class="tab-btn" onclick="switchTab('notes')"><i class="fa-solid fa-note-sticky"></i> الملاحظات</button>
-            <button class="tab-btn" onclick="switchTab('pomodoro')"><i class="fa-solid fa-clock"></i> بوموودورو</button>
             <button class="tab-btn" onclick="switchTab('resources')"><i class="fa-solid fa-link"></i> الموارد</button>
+            <button class="tab-btn" onclick="switchTab('pomodoro')"><i class="fa-solid fa-clock"></i> بوموودورو</button>
+            
             <button class="tab-btn" onclick="switchTab('settings')"><i class="fa-solid fa-gear"></i> الإعدادات</button>
         </div>
 
-        <!-- المواد -->
         <div id="subjects" class="tab-content active">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة مادة جديدة</h2>
@@ -557,7 +598,6 @@
             </div>
         </div>
 
-        <!-- الجدول -->
         <div id="schedule" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة جلسة دراسية</h2>
@@ -594,7 +634,6 @@
             </div>
         </div>
 
-        <!-- المهام -->
         <div id="todo" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة مهمة</h2>
@@ -611,7 +650,6 @@
             </div>
         </div>
 
-        <!-- الدرجات -->
         <div id="grades" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة درجة</h2>
@@ -644,13 +682,12 @@
             <div class="section">
                 <h2><i class="fa-solid fa-chart-line"></i> متتبع الدرجات</h2>
                 <div id="grades-stats" class="grid-2"></div>
-                <div style="margin-top: 20px;">
-                    <canvas id="gradesChart" style="max-height: 300px;"></canvas>
+                <div style="margin-top: 20px; position: relative; width: 100%;">
+                    <canvas id="gradesChart" style="max-height: 300px; width: 100%;"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- الحضور -->
         <div id="attendance" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-user-check"></i> تسجيل الحضور والغياب</h2>
@@ -676,13 +713,12 @@
             <div class="section">
                 <h2><i class="fa-solid fa-chart-radar"></i> إحصائيات الحضور</h2>
                 <div id="attendance-stats" class="grid-3"></div>
-                <div style="margin-top: 20px;">
-                    <canvas id="attendanceChart" style="max-height: 300px;"></canvas>
+                <div style="margin-top: 20px; position: relative; width: 100%;">
+                    <canvas id="attendanceChart" style="max-height: 300px; width: 100%"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- المواعيد -->
         <div id="deadlines" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة موعد نهائي</h2>
@@ -707,7 +743,6 @@
             </div>
         </div>
 
-        <!-- الكروت التعليمية -->
         <div id="flashcards" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة كرت استذكار</h2>
@@ -728,7 +763,6 @@
             </div>
         </div>
 
-        <!-- الملاحظات الذكية -->
         <div id="notes" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة ملاحظة ذكية</h2>
@@ -750,7 +784,6 @@
             </div>
         </div>
 
-        <!-- تقنية بوموودورو -->
         <div id="pomodoro" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-clock"></i> مؤقت بوموودورو</h2>
@@ -781,7 +814,6 @@
             </div>
         </div>
 
-        <!-- الموارد والروابط -->
         <div id="resources" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-plus-circle"></i> إضافة رابط موارد</h2>
@@ -806,7 +838,6 @@
             </div>
         </div>
 
-        <!-- الإعدادات -->
         <div id="settings" class="tab-content">
             <div class="section">
                 <h2><i class="fa-solid fa-palette"></i> تخصيص المظهر</h2>
@@ -824,10 +855,13 @@
             <div class="section">
                 <h2><i class="fa-solid fa-database"></i> النسخ الاحتياطية</h2>
                 <button class="btn-success" onclick="exportStudentData()"><i class="fa-solid fa-download"></i> تصدير البيانات</button>
-                <div style="margin-top: 15px;">
+                <div style="margin-top: 15px; margin-bottom: 15px;">
                     <label>استيراد البيانات:</label>
                     <input type="file" id="import-file" accept=".json" onchange="importStudentData(this)">
                 </div>
+                
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                <button class="btn-danger" onclick="clearAllStudentData()" style="width: 100%; padding: 12px;"><i class="fa-solid fa-trash-can"></i> حذف كافة بيانات المنصة نهائياً</button>
             </div>
 
             <div class="section">
@@ -848,6 +882,10 @@
     <script>
         let deferredPrompt;
         let swRegistration;
+        
+        // متغيرات لحفظ كائنات الرسم البياني لتجنب التداخل والانكماش
+        let gradesChartInstance = null;
+        let attendanceChartInstance = null;
 
         // طلب إذن الإشعارات
         function requestNotificationPermission() {
@@ -928,16 +966,38 @@
             }
         }
 
-        // تبديل الألسنة
+        // الدالة المحدثة بالكامل لحل مشكلة انكماش واختفاء الرسوم البيانية والجداول
         function switchTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
             const buttons = document.querySelectorAll('.tab-btn');
 
+            // إخفاء كافة التبويبات وإزالة التنشيط من الأزرار
             tabs.forEach(tab => tab.classList.remove('active'));
             buttons.forEach(btn => btn.classList.remove('active'));
 
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            // إظهار التبويب المطلوب بدقة
+            const targetTab = document.getElementById(tabName);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            // تنشيط الزر المستهدف بناءً على الـ onclick لمنع الأخطاء في التصفح
+            const correctBtn = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+            if (correctBtn) {
+                correctBtn.classList.add('active');
+            }
+
+            // إعادة بناء وتحديث الرسوم البيانية فور ظهور التبويب لتأخذ الحجم الكامل للشاشة
+            if (tabName === 'grades') {
+                setTimeout(() => {
+                    renderGradesCharts();
+                }, 50);
+            }
+            if (tabName === 'attendance') {
+                setTimeout(() => {
+                    renderAbsenceCharts();
+                }, 50);
+            }
         }
 
         // إضافة مادة
@@ -999,7 +1059,7 @@
             dropdowns.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
-                    select.innerHTML = '<option>اختر مادة...</option>';
+                    select.innerHTML = '<option value="">اختر مادة...</option>';
                     subjects.forEach(subject => {
                         const option = document.createElement('option');
                         option.value = subject.name;
@@ -1101,7 +1161,8 @@
 
         function toggleTodo(index) {
             const todos = JSON.parse(localStorage.getItem('university-todos')) || [];
-            todos[index].completed = !todos[index].completed;
+            const todosState = todos[index].completed;
+            todos[index].completed = !todosState;
             localStorage.setItem('university-todos', JSON.stringify(todos));
             renderTodos();
             updateGamificationStats();
@@ -1122,7 +1183,7 @@
             const earned = parseFloat(document.getElementById('grade-earned').value);
             const total = parseFloat(document.getElementById('grade-total').value);
 
-            if (!subject || !earned || !total) {
+            if (!subject || isNaN(earned) || isNaN(total)) {
                 Swal.fire({ icon: 'warning', title: 'بيانات ناقصة' });
                 return;
             }
@@ -1165,10 +1226,16 @@
             });
         }
 
+        // دالة الرسم البياني للدرجات (تم تصحيحها لمنع الانكماش وتراكم الكائنات)
         function renderGradesCharts() {
             const grades = JSON.parse(localStorage.getItem('student-tracked-grades')) || [];
             const ctx = document.getElementById('gradesChart');
             if (!ctx) return;
+
+            // تدمير الكائن القديم لمنع التداخل والتعليق
+            if (gradesChartInstance !== null) {
+                gradesChartInstance.destroy();
+            }
 
             const subjectGrades = {};
             grades.forEach(grade => {
@@ -1184,12 +1251,12 @@
                 return avg;
             });
 
-            new Chart(ctx, {
+            gradesChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'متوسط الدرجات',
+                        label: 'متوسط الدرجات %',
                         data: data,
                         backgroundColor: '#4f46e5',
                         borderColor: '#4f46e5',
@@ -1198,6 +1265,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -1240,7 +1308,7 @@
                 const absent = entries.filter(e => e.status === 'غائب').length;
                 const late = entries.filter(e => e.status === 'متأخر').length;
                 const total = entries.length;
-                const percentage = ((present / total) * 100).toFixed(2);
+                const percentage = total > 0 ? ((present / total) * 100).toFixed(2) : 0;
 
                 const box = document.createElement('div');
                 box.className = 'stats-box';
@@ -1253,17 +1321,25 @@
             });
         }
 
+        // دالة الرسم البياني للحضور والغياب (تم تصحيحها لتلافي الانكماش)
         function renderAbsenceCharts() {
             const records = JSON.parse(localStorage.getItem('student-absence-records')) || {};
             const ctx = document.getElementById('attendanceChart');
             if (!ctx) return;
 
+            // تدمير الكائن القديم قبل إعادة البناء لمنع تداخل الرسومات
+            if (attendanceChartInstance !== null) {
+                attendanceChartInstance.destroy();
+            }
+
             const subjects = Object.keys(records);
+            if(subjects.length === 0) return;
+
             const presentData = subjects.map(subject => records[subject].filter(e => e.status === 'حاضر').length);
             const absentData = subjects.map(subject => records[subject].filter(e => e.status === 'غائب').length);
             const lateData = subjects.map(subject => records[subject].filter(e => e.status === 'متأخر').length);
 
-            new Chart(ctx, {
+            attendanceChartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: subjects,
@@ -1290,6 +1366,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         r: {
                             beginAtZero: true
@@ -1822,6 +1899,42 @@
             initTimer();
             requestNotificationPermission();
         });
+        
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('custom-splash');
+                if(splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 500); 
+                }
+            }, 2000); 
+        });
+
+        function clearAllStudentData() {
+            Swal.fire({
+                title: 'هل أنت متأكد من حذف كافة البيانات؟',
+                text: "سيتم مسح المواد، الجدول، الدرجات، والملاحظات نهائياً ولا يمكن استعادتها إلا إذا كنت تملك نسخة احتياطية!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444', 
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'نعم، احذف كل شيء',
+                cancelButtonText: 'إلغاء الأمر',
+                reverseButtons: true 
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.clear();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم حذف البيانات!',
+                        text: 'تم تصفير المنصة بنجاح وإعادتها للحالة الافتراضية.',
+                        confirmButtonText: 'حسناً'
+                    }).then(() => {
+                        location.reload(); 
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
